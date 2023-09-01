@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +14,20 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.react-globe-marker-label {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333; /* Text color */
+  background-color: rgba(255, 255, 255, 0.8); /* Background color with transparency */
+  border-radius: 4px;
+  padding: 4px 8px;
+  text-align: center;
 }
