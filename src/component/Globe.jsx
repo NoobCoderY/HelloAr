@@ -2,14 +2,18 @@ import React from "react";
 import { useEffect, useState, useRef, useCallback } from "react";
 import hexData from "../data/countries_hex_data.json"
 import Globe from "react-globe.gl";
+import { useSelector } from "react-redux";
+
 
 export default function CustomGlobe() {
+    const { loading, Weather, error } = useSelector((state) => state);
+    console.log(Weather,"globe");
   const globeEl = useRef();
 //   const country = getRandomCountry();
   const [selectedCountry, setSelectedCountry] = useState({
-    lat: 19,
-    lng: 27,
-    label: "Mumbai"
+    lat: Weather?.coord.lat,
+    lng: Weather?.coord.lon,
+    label: Weather?.name
   });
   const [hex, setHex] = useState({ features: [] });
 
