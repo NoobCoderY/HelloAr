@@ -16,7 +16,6 @@ import { BsBoxArrowRight } from "react-icons/bs";
 const DashBoard = () => {
   const navigate = useNavigate();
   const [cityName, setCityName] = useState("Delhi");
-  const [inputText, setInputText] = useState("");
   const [query, setQuery] = useState("");
   const dispatch = useDispatch();
   const { loading, Weather, error } = useSelector((state) => state);
@@ -24,11 +23,12 @@ const DashBoard = () => {
 
   const getWeatherData = async () => {
     try {
-      await dispatch(loadWeatherRequest());
+      
+      dispatch(loadWeatherRequest());
 
       await axios
         .get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=189271b827844bff7388350c44848615&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=189271b827844bff7388350c44848615&units=metric`
         )
         .then((weather) => {
           dispatch(loadWeatherSuccess(weather.data));
@@ -39,29 +39,27 @@ const DashBoard = () => {
     }
   };
   // Define your debounce function with a delay (e.g., 500ms)
-  const debouncedSearch = debounce(getWeatherData, 500);
+  const setCityNameFn = (value) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        setCityName(value)
+        console.log(cityName,"pro");
+        resolve()
+      },2000)
+    })
+  }
+  const  handleSearch = async(e) => {
+    if (e.key === "Enter") {
+      await setCityNameFn(e.target.value).then(() => {
+        getWeatherData()
+      })
+       setQuery("") 
+    }
+  };
 
   useEffect(() => {
     getWeatherData();
-  }, [cityName]);
-
-  function capitalizeFirstLetter(str) {
-    // Check if the input string is empty or null
-    if (!str) {
-      return "";
-    }
-
-    // Capitalize the first letter and concatenate it with the rest of the string
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  }
-
-  const handleSearch = (e) => {
-    if (e.key === "Enter") {
-      setCityName(capitalizeFirstLetter(e.target.value));
-      debouncedSearch(); // Trigger the debounced API call
-      setInputText("");
-    }
-  };
+  }, []);
 
   return (
     <div>
@@ -75,7 +73,9 @@ const DashBoard = () => {
               error={error}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleSearch}
+              onKeyDown={(e) => {
+                handleSearch(e)
+              }}
             />
             <h1 className="city">{Weather?.name}</h1>
             <div className="group">
